@@ -55,7 +55,7 @@ class _ReflectionScreenState extends ConsumerState<ReflectionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'What is gently present\nwith you right now?',
+                  'What is gently present with you right now?',
                   style: Theme.of(
                     context,
                   ).textTheme.headlineMedium?.copyWith(height: 1.3),

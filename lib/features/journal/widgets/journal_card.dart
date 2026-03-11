@@ -44,7 +44,7 @@ class _JournalCardState extends ConsumerState<JournalCard>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final dateFormat = DateFormat('MMM d');
+    final dateFormat = DateFormat('MMM d, h:mm a');
     final tagColor = _tagColor(widget.entry.ambienceTag);
 
     return RepaintBoundary(
