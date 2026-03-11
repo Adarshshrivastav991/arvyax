@@ -45,11 +45,16 @@ class HomeScreen extends ConsumerWidget {
                       : AppColors.backgroundLight,
                   flexibleSpace: FlexibleSpaceBar(
                     titlePadding: const EdgeInsets.only(left: 24, bottom: 16),
-                    title: Image.asset(
-                      'assets/images/logo.png',
-                      height: 28,
-                      fit: BoxFit.contain,
-                      alignment: Alignment.centerLeft,
+                    title: Text(
+                      'ArvyaX',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimaryLight,
+                        letterSpacing: -0.5,
+                      ),
                     ),
                     background: Container(
                       decoration: BoxDecoration(
