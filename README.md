@@ -1,5 +1,9 @@
 # ArvyaX
 
+## Demo Video
+
+https://drive.google.com/file/d/1IGuWBEG7i-m6lrVG826KnEuBJFa19K_U/view?usp=drive_link
+
 A calming ambient sound + journaling app built with Flutter. Pick a soundscape, run a timed session with a breathing animation, then write a quick reflection — everything gets saved locally.
 
 Dark mode is the default because that's the vibe, but there's a light mode too.
