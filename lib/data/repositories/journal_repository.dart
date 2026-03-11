@@ -40,7 +40,16 @@ class JournalRepository {
 
   Future<List<JournalEntryModel>> getFavorites() async {
     final entries = await getAllEntries();
-    return entries;
+    return entries.where((e) => e.isFavorite).toList();
+  }
+
+  Future<void> toggleFavorite(String id) async {
+    final box = await _getBox();
+    final entry = box.get(id);
+    if (entry != null) {
+      final updated = entry.copyWith(isFavorite: !entry.isFavorite);
+      await box.put(id, updated);
+    }
   }
 
   Future<List<JournalEntryModel>> getRecent() async {

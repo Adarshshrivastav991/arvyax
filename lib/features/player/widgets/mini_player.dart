@@ -136,11 +136,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer>
                           ],
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.skip_previous, size: 22),
-                        onPressed: () {},
-                        color: AppColors.textSecondaryLight,
-                      ),
+                      const SizedBox(width: 8),
                       GestureDetector(
                         onTap: () {
                           HapticSettingsNotifier.triggerHeavyHaptic();
@@ -178,11 +174,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer>
                             ),
                           ),
                         ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.skip_next, size: 22),
-                        onPressed: () {},
-                        color: AppColors.textSecondaryLight,
                       ),
                     ],
                   ),

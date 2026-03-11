@@ -92,6 +92,8 @@ class JournalHistoryScreen extends ConsumerWidget {
                                 7,
                           )
                           .toList()
+                    : selectedTab == 2
+                    ? entries.where((e) => e.isFavorite).toList()
                     : entries;
 
                 if (filtered.isEmpty) {

@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../data/models/journal_entry_model.dart';
+import '../../../data/repositories/journal_repository.dart';
+import '../controller/journal_controller.dart';
 import '../../../shared/theme/colors.dart';
 import '../../../shared/providers/haptic_settings_provider.dart';
 
-class JournalCard extends StatefulWidget {
+class JournalCard extends ConsumerStatefulWidget {
   final JournalEntryModel entry;
   final VoidCallback onTap;
 
   const JournalCard({super.key, required this.entry, required this.onTap});
 
   @override
-  State<JournalCard> createState() => _JournalCardState();
+  ConsumerState<JournalCard> createState() => _JournalCardState();
 }
 
-class _JournalCardState extends State<JournalCard>
+class _JournalCardState extends ConsumerState<JournalCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
@@ -148,10 +151,27 @@ class _JournalCardState extends State<JournalCard>
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const Icon(
-                            Icons.favorite,
-                            color: AppColors.orange,
-                            size: 20,
+                          GestureDetector(
+                            onTap: () {
+                              HapticSettingsNotifier.triggerHaptic();
+                              ref
+                                  .read(journalRepositoryProvider)
+                                  .toggleFavorite(widget.entry.id);
+                              ref.invalidate(journalEntriesProvider);
+                            },
+                            child: widget.entry.isFavorite
+                                ? const Icon(
+                                    Icons.favorite,
+                                    color: AppColors.orange,
+                                    size: 20,
+                                  )
+                                : Icon(
+                                    Icons.favorite_border,
+                                    color: isDark
+                                        ? AppColors.textSecondaryDark
+                                        : AppColors.textSecondaryLight,
+                                    size: 20,
+                                  ),
                           ),
                         ],
                       ),

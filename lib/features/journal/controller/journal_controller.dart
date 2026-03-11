@@ -101,7 +101,9 @@ class ReflectionController extends StateNotifier<ReflectionState> {
 }
 
 final reflectionControllerProvider =
-    StateNotifierProvider<ReflectionController, ReflectionState>((ref) {
+    StateNotifierProvider.autoDispose<ReflectionController, ReflectionState>((
+      ref,
+    ) {
       final repo = ref.watch(journalRepositoryProvider);
       return ReflectionController(repo);
     });

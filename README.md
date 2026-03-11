@@ -1,485 +1,162 @@
-# ArvyaX — Immersive Ambient Session & Reflection App
+# ArvyaX
 
-> A premium, dark-mode-first Flutter application for ambient sound sessions, mood-based exploration, and post-session journaling. Built with clean architecture, Riverpod state management, and ultra-polished glassmorphism UI.
+A calming ambient sound + journaling app built with Flutter. Pick a soundscape, run a timed session with a breathing animation, then write a quick reflection — everything gets saved locally.
 
----
+Dark mode is the default because that's the vibe, but there's a light mode too.
 
-## Screenshots & Flow
-
-```
-Home (Browse)  →  Ambience Details  →  Session Player  →  Reflection  →  Journal
-     ↕                                      ↕
-Sessions Library (Mood-based)           Mini Player
-     ↕
-  Journal History  →  Journal Detail
-     ↕
-  Settings (Haptic Control)
-```
-
----
-
-## How to Run
+## Getting started
 
 ```bash
-# 1. Clone the repository
-git clone <repo-url>
-cd arvyax
-
-# 2. Install dependencies
 flutter pub get
-
-# 3. Run on a connected device or emulator
 flutter run
 ```
 
-**Requirements:** Flutter SDK ≥ 3.10.4 · Dart ≥ 3.10.4
+Needs Flutter 3.10.4+. Build a release APK with `flutter build apk --release`.
 
-```bash
-# Build release APK
-flutter build apk --release
-```
+## What it does
 
----
+The main flow is pretty simple: **Browse → Play → Reflect → Journal**.
 
-## Complete Feature List
+**Home** — Grid of ambient sessions you can search and filter by mood (Focus, Calm, Sleep, Reset). Each card opens a detail page with the full description, duration, and a "sensory recipe" — stuff like Breeze, Warm Light, Rain, Binaural beats, etc.
 
-### 1. Home Screen — Ambience Browser
-- SliverAppBar with gradient header and "ArvyaX" branding
-- Real-time search bar with animated clear button
-- Tag filter chips: **Focus** / **Calm** / **Sleep** / **Reset** with press-scale animation
-- 2-column grid of ambience cards with radial glow overlays
-- Section title with orange accent bar indicator
-- Theme toggle (dark ↔ light) with rotation animation
-- Settings gear icon for quick access
-- Mini player docked at bottom when session is active
+**Sessions Library** — Second tab, organizes the same sessions by mood. Horizontal carousels for each category. There's a quick-play button on each card so you can start playing without opening details first.
 
-### 2. Sessions Library — Mood-Based Sound Library
-- Dedicated tab with SliverAppBar (180px), gradient background, headphones icon
-- **4 mood category cards** (horizontal scroll):
-  - **Focus** — Orange gradient (`#E8652B → #FF8A65`)
-  - **Calm** — Green gradient (`#6B8E7B → #81C784`)
-  - **Sleep** — Blue gradient (`#5B6AAF → #7986CB`)
-  - **Reset** — Gold gradient (`#D4A017 → #FFD54F`)
-- Each mood expands into a horizontal session carousel
-- Session count badge per mood ("X sessions")
-- Quick-play button on each card (instant playback without going to details)
-- Duration badge on each card
-- Press-scale animation on every interactive card
+**Player** — Full screen with a breathing orb that scales in and out on a 6-second cycle. Play/pause, skip ±10s, seek bar. Audio loops continuously. When the timer ends it auto-navigates to the reflection screen. You can also end early — there's a confirmation dialog so you don't accidentally lose progress.
 
-### 3. Ambience Details Screen
-- Hero image with tag-based gradient + radial glow + bottom fade
-- Tag badge (Focus/Calm/Sleep/Reset) with colored icon
-- Duration badge formatted in minutes
-- Full description text with 1.6x line height
-- **Sensory Recipe chips** — Each recipe ingredient gets a unique icon and color:
-  - Breeze → air icon (blue), Warm Light → sun icon (gold), Mist → cloud icon (grey)
-  - Binaural → headphones icon (purple), Rain → water icon (cyan), Waves → waves icon
-  - White Noise → equalizer icon, Birdsong → music note (green), Thunder → flash icon
-  - Fireplace → fire icon (red), Night Sounds → moon icon (indigo)
-- "Start Session" button with gradient glow shadow
-- Back button with frosted circle overlay
-- Mini player visible if another session is running
+**Mini Player** — Shows up at the bottom of every other screen while a session is running. Play/pause + progress bar. Tap it to go back to the full player.
 
-### 4. Session Player — Full-Screen Audio Playback
-- Breathing circle animation (6-second cycle, 0.85x → 1.0x scale) with radial glow + inner glow
-- Tag-colored gradient orb (210px) with shadow bloom
-- "NOW PLAYING" label with orange-accented tracking
-- Tag badge pill below title
-- **Seek bar** — Rounded track (5px), orange thumb, elapsed time highlighted in orange
-- **Player controls** — Skip back 10s / Play-Pause (gradient button with AnimatedSwitcher) / Skip forward 10s
-- Pill-shaped page indicator (active dot stretches to 20px)
-- "END SESSION" outlined pill button
-- End session confirmation dialog with cancel/end actions
-- Top bar with rounded back/more containers
-- Looping audio playback via `just_audio` with `LoopMode.all`
+**Reflection** — After a session ends, you get a prompt ("What is gently present with you right now?"), a text field, and 4 mood chips (Calm, Grounded, Energized, Sleepy). Hit save and it goes into the journal.
 
-### 5. Mini Player (Persistent)
-- Appears on Home, Sessions Library, Details, and Journal screens when a session is active
-- Compact card with gradient play button + AnimatedSwitcher icon swap
-- Title, subtitle, skip previous/next buttons
-- Linear progress indicator synced to session timer
-- Frosted glass styling with drop shadow
-- Tap anywhere to open full player
+**Journal** — Three tabs: All, Recent (last 7 days), Favorites. Each entry shows the ambience name, date, mood, a preview of what you wrote, and a "View Session" button for the full detail page with stats. You can tap the heart icon on any card to favorite/unfavorite it.
 
-### 6. Post-Session Reflection
-- Prompt: "What is gently present with you right now?"
-- Multiline text field (8 lines) with privacy note: "Shared only with you"
-- **Mood selector** — 4 animated mood chips:
-  - **Calm** (spa icon, peachy) · **Grounded** (landscape icon, tan)
-  - **Energized** (bolt icon, green) · **Sleepy** (moon icon, lavender)
-- Selected mood chip gets gradient fill + orange border
-- Save button with loading spinner
-- Auto-navigates to journal after save
+**Settings** — A haptic intensity slider that goes from subtle taps to insane vibrations. Logarithmic scale (10–10,000), 5 quick presets, and a test button. The whole app uses haptic feedback on interactions — this screen controls how strong it feels.
 
-### 7. Journal History
-- Custom header with "Journal" title + "Your reflections & growth" subtitle
-- **Pill-style tabs**: All / Recent (last 7 days) / Favorites
-  - Active tab gets orange fill + border
-- Chronological card list with:
-  - Tag-colored gradient header with radial glow
-  - Date + ambience title
-  - Mood label in orange uppercase
-  - Italicized reflection preview (3-line max)
-  - Duration info + gradient "View Session" button with shadow
-  - Favorite heart icon
-- Empty state with icon + message when no entries exist
+**Dark/Light toggle** — On the home screen. Rotates the icon when you switch. Every screen adapts.
 
-### 8. Journal Detail
-- Expandable SliverAppBar (220px) with tag-based gradient hero
-- Mood badge with icon + name
-- Date/time formatted: "March 11, 2026 • 3:45 PM"
-- Full reflection text at 1.8x line height
-- **Session stats card**: Duration + Focus Score (80–99%)
-- Edit Entry button (outline orange, haptic feedback)
-- Copyright footer
+## Audio
 
-### 9. Haptic Settings (Settings Screen)
-- **Vibration intensity slider**: Logarithmic scale from 10 to 10,000
-- Live percentage badge
-- Dynamic intensity label with color coding:
-  - Subtle (green) → Normal (green) → Strong (blue) → Ultra (blue) → Extreme (orange) → Mega (red) → INSANE (red)
-- **5 quick presets**: Subtle (25) · Normal (100) · Strong (200) · Extreme (500) · Insane (2000)
-- Test vibration button
-- Haptic vibration profiles per intensity range:
-  - `< 40`: Light pulse (10ms)
-  - `40–80`: Normal (20ms)
-  - `80–150`: Strong (30ms)
-  - `150–300`: Double impact burst
-  - `300–500`: Triple burst
-  - `500–1000`: Rapid fire (4x pulses)
-  - `> 1000`: Maximum intensity (6x pulses)
+5 MP3 files in `assets/audio/`, mapped to 6 ambiences:
 
-### 10. Dark / Light Theme Toggle
-- System-independent toggle on home screen
-- Full dual theme with 25+ semantic color tokens
-- Rotation animation on toggle icon switch
-- All screens, cards, nav bar, player adapt instantly
+- **Forest Focus** & **Misty Peaks** → `forest.mp3`
+- **Ocean Calm** → `ocean clam.mp3`
+- **Rain Shelter** → `Rain shelter.mp3`
+- **Sunrise Reset** → `sunrise reset.mp3`
+- **Starlit Meadow** → `sleep.mp3`
 
----
+Playback uses `just_audio` for the actual player, `audio_service` for background play + notification controls, and `audio_session` for focus handling. Audio keeps playing when you leave the app — you get the standard Android media notification with play/pause.
 
-## Audio System
+## Tech stack
 
-### Audio Files (5 ambient MP3 tracks)
-| File | Mapped To |
-|---|---|
-| `forest.mp3` | Forest Focus, Misty Peaks |
-| `ocean clam.mp3` | Ocean Calm |
-| `Rain shelter.mp3` | Rain Shelter |
-| `sunrise reset.mp3` | Sunrise Reset |
-| `sleep.mp3` | Starlit Meadow |
+Why each package:
 
-### Audio Playback Stack
-- **`just_audio`** — Core audio player engine (asset loading, seek, loop)
-- **`audio_service`** — Background playback with Android notification controls
-- **`audio_session`** — Audio focus management and interruption handling
-- Loop mode: `LoopMode.all` (continuous ambient looping)
-- Controls: Play, Pause, Stop, Seek, Rewind (−10s), FastForward (+10s)
-- Session timer runs independently (1-second ticks), persists every 5 seconds to Hive
-- Media notification with: Title, Artist ("ArvyaX"), Album (tag name), Duration
+- **flutter_riverpod** — picked over Provider/Bloc because providers are compile-safe (typo = build error, not runtime crash), auto-dispose lifecycle is basically free, and you can compose providers without nesting widgets. The ~13 providers in this app would've been a lot of boilerplate with Bloc.
+- **just_audio** — the most mature audio library for Flutter. Handles asset loading, seeking, loop modes, position streams. Other options (audioplayers) had worse API ergonomics for what I needed.
+- **audio_service** — needed for background playback. Without it, audio stops when the app goes to background on Android. This gives you the notification controls for free.
+- **audio_session** — handles audio focus (pauses when a phone call comes in, etc.). Small package but important for a real audio app.
+- **hive + hive_flutter** — chose over sqflite/drift because the data is simple key-value stuff (journal entries, session snapshots). No relations, no queries beyond "get all sorted by date." Hive is faster to set up and doesn't need native SQLite binaries.
+- **go_router** — Flutter team's recommended router. ShellRoute pattern made the persistent bottom nav trivial. Deep linking support is there if I needed it later.
+- **google_fonts** — Inter is a clean sans-serif that works well at small sizes. Loading via google_fonts avoids bundling font files in the asset folder.
+- **vibration** — needed raw control over vibration duration and amplitude patterns. The basic `HapticFeedback` in Flutter only gives you 3 presets, I wanted a full slider.
+- **intl** — standard date formatting. `DateFormat('MMMM d, y • h:mm a')` kind of stuff.
+- **uuid** — journal entries need unique IDs. UUID v4 is the simplest approach.
+- **json_annotation** — model serialization for the ambience JSON. Keeps the parsing code out of the model class.
 
----
+## Project structure
 
-## Ambience Library (6 Sessions)
-
-| ID | Title | Tag | Duration | Audio | Recipe |
-|---|---|---|---|---|---|
-| `forest_focus` | Forest Focus | Focus | 3 min | forest.mp3 | Breeze, Warm Light, Mist, Binaural |
-| `ocean_calm` | Ocean Calm | Calm | 2.5 min | ocean clam.mp3 | Waves, Sea Breeze, Soft Rain |
-| `rain_shelter` | Rain Shelter | Sleep | 3 min | Rain shelter.mp3 | Rain, Thunder, Fireplace |
-| `sunrise_reset` | Sunrise Reset | Reset | 2 min | sunrise reset.mp3 | Warm Light, Birdsong, Breeze |
-| `misty_peaks` | Misty Peaks | Focus | 2.5 min | forest.mp3 | Wind, Cool Mist, White Noise |
-| `starlit_meadow` | Starlit Meadow | Sleep | 3 min | sleep.mp3 | Night Sounds, Cool Breeze, Binaural |
-
----
-
-## Architecture
-
-### Folder Structure
+Feature-based layout. ~37 Dart files across:
 
 ```
 lib/
-├── main.dart                       # App entry, Hive init, AudioService init, ProviderScope
-├── router.dart                     # GoRouter config + custom bottom nav shell
+├── main.dart                     # entry point, Hive init, AudioService init
+├── router.dart                   # GoRouter + custom bottom nav bar
 ├── data/
-│   ├── models/
-│   │   ├── ambience_model.dart     # @HiveType(0) — id, title, tag, duration, audio, recipe
-│   │   ├── ambience_model.g.dart   # Generated Hive adapter
-│   │   ├── journal_entry_model.dart # @HiveType(1) — mood, text, timestamps, stats
-│   │   └── journal_entry_model.g.dart
-│   └── repositories/
-│       ├── ambience_repository.dart    # JSON loader with in-memory cache
-│       ├── journal_repository.dart     # Hive CRUD — add, get, getAll, delete, getRecent
-│       └── session_repository.dart     # Hive key-value — save/restore active session
+│   ├── models/                   # AmbienceModel (HiveType 0), JournalEntryModel (HiveType 1)
+│   └── repositories/             # ambience (JSON+cache), journal (Hive CRUD), session (Hive k/v)
 ├── features/
-│   ├── ambience/
-│   │   ├── controller/
-│   │   │   └── ambience_controller.dart   # FutureProvider, search/tag StateProviders, filtered
-│   │   ├── screens/
-│   │   │   ├── home_screen.dart           # SliverAppBar, search, filter grid
-│   │   │   └── ambience_details_screen.dart # Hero, recipe chips, start session
-│   │   └── widgets/
-│   │       ├── ambience_card.dart          # Animated card with radial glow
-│   │       ├── search_bar.dart            # Glassmorphism search input
-│   │       └── tag_filter_chip.dart       # Press-scale animated tag pill
-│   ├── sessions/
-│   │   └── screens/
-│   │       └── sessions_library_screen.dart # Mood categories + horizontal session carousels
-│   ├── player/
-│   │   ├── controller/
-│   │   │   └── session_controller.dart    # Play, pause, seek, timer, persist, end
-│   │   ├── services/
-│   │   │   └── audio_handler.dart         # BaseAudioHandler + just_audio bridge
-│   │   ├── screens/
-│   │   │   └── session_player_screen.dart # Breathing orb, controls, progress
-│   │   └── widgets/
-│   │       ├── player_controls.dart       # Gradient play button, skip buttons
-│   │       ├── progress_bar.dart          # Custom slider with orange timer
-│   │       └── mini_player.dart           # Compact persistent player card
-│   ├── journal/
-│   │   ├── controller/
-│   │   │   └── journal_controller.dart    # ReflectionController + providers
-│   │   ├── screens/
-│   │   │   ├── reflection_screen.dart     # Mood selector + text input + save
-│   │   │   ├── journal_history_screen.dart # Pill tabs + card list
-│   │   │   └── journal_detail_screen.dart # Full entry with stats
-│   │   └── widgets/
-│   │       ├── journal_card.dart          # Entry preview with gradient header
-│   │       └── mood_selector.dart         # 4-option animated mood picker
-│   └── settings/
-│       └── settings_screen.dart           # Haptic intensity + presets
+│   ├── ambience/                 # home screen, details screen, cards, search, filter chips
+│   ├── sessions/                 # mood-based library screen
+│   ├── player/                   # session controller, audio handler, player screen, mini player
+│   ├── journal/                  # reflection screen, journal history, journal detail, mood selector
+│   └── settings/                 # haptic intensity settings
 └── shared/
-    ├── theme/
-    │   ├── app_theme.dart                 # Light + Dark ThemeData (Material 3)
-    │   ├── colors.dart                    # 30+ semantic color tokens
-    │   └── theme_provider.dart            # StateNotifier dark/light toggle
-    ├── providers/
-    │   └── haptic_settings_provider.dart  # Intensity manager + vibration engine
-    ├── utils/
-    │   └── time_formatter.dart            # MM:SS, "X min", "X MIN", "X Minutes"
-    └── widgets/
-        ├── primary_button.dart            # Gradient CTA with shadow + loading
-        ├── empty_state.dart               # Icon + message + optional action
-        └── frosted_glass.dart             # Reusable glassmorphism container
+    ├── theme/                    # light + dark themes, 30+ color tokens, theme toggle provider
+    ├── providers/                # haptic settings (intensity + vibration engine)
+    ├── utils/                    # time formatting
+    └── widgets/                  # primary button, empty state, frosted glass container
 ```
 
-### State Management — Riverpod
+Each feature owns its own controller, screens, and widgets — nothing leaks across boundaries. `shared/` has things every feature needs (theme, common widgets). `data/` is the only layer that touches storage or raw JSON.
 
-| Provider | Type | Purpose |
-|---|---|---|
-| `ambiencesProvider` | `FutureProvider` | Loads 6 ambiences from `ambiences.json` |
-| `filteredAmbiencesProvider` | `Provider` | Applies real-time search query + tag filter |
-| `searchQueryProvider` | `StateProvider<String>` | Current search text |
-| `selectedTagProvider` | `StateProvider<String?>` | Active tag filter (null = all) |
-| `ambienceByIdProvider` | `FutureProvider.family` | Single ambience lookup by ID |
-| `sessionControllerProvider` | `StateNotifierProvider` | Full session lifecycle: play, pause, seek, timer, persist |
-| `reflectionControllerProvider` | `StateNotifierProvider` | Journal text + mood + save flow |
-| `journalEntriesProvider` | `FutureProvider` | All persisted journal entries (sorted by date) |
-| `recentEntriesProvider` | `FutureProvider` | Entries from last 7 days |
-| `journalEntryByIdProvider` | `FutureProvider.family` | Single entry lookup |
-| `journalTabProvider` | `StateProvider<int>` | Active journal tab index |
-| `themeProvider` | `StateNotifierProvider` | Dark/light mode toggle |
-| `hapticSettingsProvider` | `StateNotifierProvider` | Haptic intensity + vibration execution |
+## State management
 
-### Data Flow
+Everything runs through Riverpod. The approach varies by what the provider is doing:
 
-```
-assets/data/ambiences.json  ──→  AmbienceRepository (cache)  ──→  ambiencesProvider
-                                                                        │
-                                                              filteredAmbiencesProvider
-                                                              (search + tag filter)
-                                                                        │
-                                                                   HomeScreen UI
-                                                                        │
-                                                              SessionController
-                                                              (play, timer, persist)
-                                                                        │
-                                                                  ┌─────┴──────┐
-                                                            AudioHandler    Hive Box
-                                                            (just_audio)   (session_state)
-                                                                  │
-                                                            SessionPlayerScreen
-                                                                  │
-                                                            ReflectionController
-                                                            (mood + text + save)
-                                                                  │
-                                                            JournalRepository
-                                                            (Hive: journal_entries)
-                                                                  │
-                                                            JournalHistoryScreen
-```
+- **Data loading** uses `FutureProvider` — `ambiencesProvider` loads from JSON once and caches, `journalEntriesProvider` reads from Hive. These auto-dispose isn't needed because they represent app-level data.
+- **Mutable state** uses `StateNotifierProvider` — `SessionController` manages the full playback lifecycle (play, pause, seek, timer tick, persist, end). `ReflectionController` holds the journal text + mood while the user is typing, then resets after save. This one is `autoDispose` so stale reflections don't carry over between sessions.
+- **Simple filters** use `StateProvider` — search query, selected tag, journal tab index. Lightweight, no class needed.
+- **Derived state** uses plain `Provider` — `filteredAmbiencesProvider` combines the raw ambience list with the current search + tag, recalculates reactively whenever either changes.
 
----
+## How data flows (Repository → Controller → UI)
 
-## Navigation (GoRouter)
+The pattern is the same everywhere: repositories are the only things that touch storage. Controllers call repository methods and hold the state. UI watches the controller's state via `ref.watch()`.
 
-| Route | Screen | Nav Bar |
-|---|---|---|
-| `/` | HomeScreen | ✅ Home |
-| `/sessions` | SessionsLibraryScreen | ✅ Sessions |
-| `/journal` | JournalHistoryScreen | ✅ Journal |
-| `/ambience/:id` | AmbienceDetailsScreen | ❌ |
-| `/player` | SessionPlayerScreen | ❌ |
-| `/reflection/:ambienceId` | ReflectionScreen | ❌ |
-| `/journal/:id` | JournalDetailScreen | ❌ |
-| `/settings` | SettingsScreen | ❌ |
+Concrete example — playing a session:
 
-- **ShellRoute** wraps the 3 main tabs with persistent bottom nav
-- **NoTransitionPage** used for tab switches (instant, no animation)
-- Standard `CupertinoPageTransitionsBuilder` for push/pop routes
+1. User taps "Start Session" on the ambience detail screen
+2. UI calls `ref.read(sessionControllerProvider.notifier).startSession(ambience)`
+3. `SessionController.startSession()` does three things:
+   - Tells `AudioHandler` to load the MP3 from assets and call `play()`
+   - Starts a 1-second timer that increments `elapsedSeconds`
+   - Every 5 ticks, calls `SessionRepository.saveActiveSession()` to persist progress to Hive
+4. UI rebuilds because `sessionControllerProvider`'s state changed (isPlaying, elapsed, etc.)
+5. When the timer hits the ambience duration, controller calls `stop()` on the audio handler, clears the session from Hive, and the UI auto-navigates to the reflection screen
 
-### Custom Bottom Navigation Bar
-- Pill-style nav items with animated container expansion
-- Active tab shows orange-tinted pill + label text
-- Inactive tabs show only icon in muted color
-- Haptic feedback on every tap
-- Drop shadow + border blur for frosted glass effect
-- Fully adaptive dark/light styling
+Journal flow is similar: reflection screen collects text + mood → `ReflectionController.saveReflection()` → `JournalRepository.addEntry()` → Hive box. Journal history screen watches `journalEntriesProvider` which reads from the same Hive box.
 
----
+The key thing is nothing in `features/` imports Hive directly. All storage access goes through the `data/repositories/` layer.
 
-## UI Design System
+## Persistence
 
-### Design Language
-- **Glassmorphism** — Frosted glass cards with gradient fills and translucent borders
-- **Material 3** — `useMaterial3: true` with InkSparkle ripple
-- **Typography** — Google Fonts Inter (8 weight variants, -0.5 letter spacing for headings)
-- **Border Radius** — 16px (nav pills), 20px (buttons), 24px (cards), 28px (search bar)
-- **Shadows** — Colored shadows matching tag colors for depth perception
+Two Hive boxes:
+- `journal_entries` — all reflections stored as `JournalEntryModel` objects (id, mood, text, ambience info, timestamp, duration, favorite status)
+- `session_state` — saves the running session every 5 seconds (ambience ID, elapsed time, playing state). On next app launch it checks if the saved session is still valid and restores it.
 
-### Color Palette (30+ tokens)
+Journal entries survive app restarts. Session state auto-clears when the session completes normally.
 
-| Token | Light | Dark | Usage |
-|---|---|---|---|
-| Primary | `#E8652B` | `#E8652B` | Buttons, accents, active states |
-| Primary Light | `#F4845F` | `#F4845F` | Gradients, secondary accents |
-| Background | `#F5F6F0` | `#1A1D21` | Scaffold background |
-| Surface | `#FFFFFF` | `#252830` | Cards, inputs |
-| Card | `#FFFFFF` | `#2C2F38` | Card backgrounds |
-| Text Primary | `#1C2526` | `#F1F1F1` | Headings, body text |
-| Text Secondary | `#6B7280` | `#9CA3AF` | Subtitles, captions |
-| Focus Tag | `#E8652B` | — | Focus sessions |
-| Calm Tag | `#6B8E7B` | — | Calm sessions |
-| Sleep Tag | `#5B6AAF` | — | Sleep sessions |
-| Reset Tag | `#D4A017` | — | Reset sessions |
-| Player BG | `#DFE5DA` | `#1E2220` | Player screen background |
+## UI notes
 
-### Animations
-- **Breathing orb** — 6s ease-in-out loop (0.85x → 1.0x scale) on player screen
-- **Press scale** — 120ms ease-out-back (→0.92x–0.96x) on all cards, chips, and buttons
-- **Theme toggle** — 300ms rotation transition on icon swap
-- **Tab selection** — 250ms animated container (color, padding, border)
-- **Play/Pause** — 200ms AnimatedSwitcher with crossfade
-- **Filter chips** — 280ms gradient + border + shadow animation
-- **Mood selector** — 250ms gradient fill + border width animation
-- **Page dots** — AnimatedContainer (active dot stretches 6px → 20px)
-- **Nav items** — 250ms padding + background pill expansion
+The whole UI leans into glassmorphism — frosted glass cards, gradient overlays, translucent borders. Pretty much every tappable element has a press-scale animation (shrinks to ~0.96x). The nav bar is custom-built (not Flutter's BottomNavigationBar) — pill-style items that expand with a label when active.
 
----
+Color-wise, the primary accent is a burnt orange (`#E8652B`). Each mood tag has its own color: Focus=orange, Calm=green, Sleep=blue, Reset=gold. Those colors show up everywhere — card shadows, gradient headers, tag badges, player orb.
 
-## Technology Stack
+Typography is Inter via Google Fonts, with tighter letter spacing on headings.
 
-### Framework & Language
-| Technology | Version | Purpose |
-|---|---|---|
-| **Flutter** | ≥ 3.10.4 | Cross-platform UI framework |
-| **Dart** | ≥ 3.10.4 | Programming language |
-| **Material 3** | Built-in | Design system |
+## Navigation
 
-### Dependencies (12 packages)
+3 tabs in the bottom nav (Home, Sessions, Journal) as a ShellRoute, plus detail/player/reflection/settings as push routes. Tab switches are instant (no transition animation), other routes use Cupertino-style slide transitions.
 
-| Package | Version | Purpose |
-|---|---|---|
-| **flutter_riverpod** | ^2.6.1 | State management — compile-safe providers, auto-dispose, reactive rebuilds |
-| **riverpod_annotation** | ^2.6.1 | Code generation annotations for Riverpod |
-| **just_audio** | ^0.9.42 | Audio engine — asset loading, seek, loop, position tracking |
-| **audio_service** | ^0.18.15 | Background audio — system notification, media controls, foreground service |
-| **audio_session** | ^0.1.21 | Audio focus — interruption handling, session category management |
-| **vibration** | ^2.0.0 | Haptic engine — custom duration, amplitude, and pattern vibrations |
-| **hive** | ^2.2.3 | Local database — fast NoSQL key-value store, no native deps |
-| **hive_flutter** | ^1.1.0 | Hive Flutter integration — path provider, box management |
-| **go_router** | ^14.8.1 | Navigation — declarative routing, ShellRoute, deep linking, path params |
-| **google_fonts** | ^6.2.1 | Typography — Inter font family loaded on demand |
-| **intl** | ^0.20.2 | Date formatting — "MMM d", "MMMM d, y • h:mm a" patterns |
-| **uuid** | ^4.5.1 | UUID v4 generation for journal entry IDs |
-| **json_annotation** | ^4.9.0 | JSON serialization annotations |
-| **cupertino_icons** | ^1.0.8 | iOS-style icon set |
-
-### Dev Dependencies
-
-| Package | Version | Purpose |
-|---|---|---|
-| **flutter_test** | SDK | Widget and unit testing |
-| **flutter_lints** | ^6.0.0 | Static analysis rules |
-
----
-
-## Data Models
-
-### AmbienceModel (Hive TypeId: 0)
-```
-id: String              # Unique slug (e.g., "forest_focus")
-title: String           # Display name
-tag: String             # Category: Focus, Calm, Sleep, Reset
-duration: int           # Duration in seconds
-description: String     # Full description text
-image: String           # Asset path (placeholder)
-audio: String           # Audio asset path (e.g., "assets/audio/forest.mp3")
-recipe: List<String>    # Sensory recipe ingredients
-```
-
-### JournalEntryModel (Hive TypeId: 1)
-```
-id: String                    # UUID v4
-ambienceId: String            # Linked ambience
-ambienceTitle: String         # Denormalized title
-ambienceImage: String         # Denormalized image path
-ambienceTag: String           # Denormalized tag
-mood: String                  # Calm, Grounded, Energized, Sleepy
-reflectionText: String        # User journal text
-createdAt: DateTime           # Timestamp
-sessionDurationSeconds: int   # Actual session length
-```
-
----
-
-## Persistence (Hive Boxes)
-
-| Box Name | Type | Contents |
-|---|---|---|
-| `journal_entries` | `Box<JournalEntryModel>` | All saved reflections, keyed by UUID |
-| `session_state` | `Box<dynamic>` | Active session: ambienceId, elapsedSeconds, isPlaying, savedAt |
-
-- Journal entries persist across app restarts
-- Active session state saved every 5 seconds and restored on cold start
-- Session auto-cleared when completed
-
----
-
-## Platforms Supported
-
-| Platform | Status |
-|---|---|
-| Android | ✅ Primary target |
-| iOS | ✅ Configured |
-| Web | ✅ Shell configured |
-| macOS | ✅ Shell configured |
-| Windows | ✅ Shell configured |
-| Linux | ✅ Shell configured |
-
----
-
-## Build & Analyze
+## Build
 
 ```bash
-# Run static analysis (should pass with 0 issues)
-flutter analyze
-
-# Run tests
+flutter analyze    # should show 0 issues
 flutter test
-
-# Build release APK
 flutter build apk --release
-
-# Build iOS
-flutter build ios --release
 ```
+
+## Tradeoffs & what I'd do with two more days
+
+**What's working well:** The core loop (browse → play → reflect → journal) is solid. Audio actually plays, sessions persist across app kills, the journal is fully functional with favorites. The UI is polished enough to feel like a real product.
+
+**What I'd improve:**
+
+1. **Testing** — There are no unit or widget tests right now beyond the default. First priority would be testing `SessionController` (timer logic, persistence save/restore, edge cases like ending a session at exactly 0 seconds left) and `JournalRepository` (CRUD, favorites toggle, getRecent filter). These are the two most critical paths and the ones most likely to have subtle bugs.
+
+2. **Error handling on audio** — Right now if an audio file fails to load, the timer still starts and the user sees a "playing" session with silence. I'd add an error state to the session controller that the player screen listens for, and show a snackbar + auto-stop the session.
+
+3. **Real images** — The ambience cards use gradient placeholders. I'd add actual ambient photography (forest, ocean, rain, etc.) with Hero transitions between the card and the detail screen. The `image` field already exists on the model, just needs real assets.
+
+4. **App lifecycle handling** — The session timer should pause when the app goes to background and resume when it comes back. Right now it relies on `audio_service` keeping things alive, but on some OEMs the timer could drift. A `WidgetsBindingObserver` would fix this.
+
+5. **Search in journal** — The journal only has tab filters right now. Full-text search across reflection text would be useful once you have more than ~20 entries.
+
+6. **Accessibility** — I haven't tested with TalkBack or larger text sizes. All interactive elements need semantic labels, and the breathing animation should have a reduced-motion alternative.

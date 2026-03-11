@@ -31,6 +31,9 @@ class JournalEntryModel extends HiveObject {
   @HiveField(8)
   final String ambienceTag;
 
+  @HiveField(9)
+  final bool isFavorite;
+
   JournalEntryModel({
     required this.id,
     required this.ambienceId,
@@ -41,5 +44,21 @@ class JournalEntryModel extends HiveObject {
     required this.createdAt,
     required this.sessionDurationSeconds,
     required this.ambienceTag,
+    this.isFavorite = false,
   });
+
+  JournalEntryModel copyWith({bool? isFavorite}) {
+    return JournalEntryModel(
+      id: id,
+      ambienceId: ambienceId,
+      ambienceTitle: ambienceTitle,
+      ambienceImage: ambienceImage,
+      mood: mood,
+      reflectionText: reflectionText,
+      createdAt: createdAt,
+      sessionDurationSeconds: sessionDurationSeconds,
+      ambienceTag: ambienceTag,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
 }
