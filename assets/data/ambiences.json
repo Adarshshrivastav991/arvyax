@@ -6,7 +6,7 @@
     "duration": 180,
     "description": "Immerse yourself in the gentle whispers of the ancient woodland. Designed to enhance deep concentration and cognitive clarity through natural acoustic layers and optimized lighting.",
     "image": "assets/images/forest.jpg",
-    "audio": "assets/audio/session.mp3",
+    "audio": "assets/audio/forest.mp3",
     "recipe": ["Breeze", "Warm Light", "Mist", "Binaural"]
   },
   {
@@ -16,7 +16,7 @@
     "duration": 150,
     "description": "Let the rhythmic waves of a tranquil ocean wash away your tension. A soothing blend of water and gentle wind for deep relaxation.",
     "image": "assets/images/ocean.jpg",
-    "audio": "assets/audio/session.mp3",
+    "audio": "assets/audio/ocean clam.mp3",
     "recipe": ["Waves", "Sea Breeze", "Soft Rain"]
   },
   {
@@ -26,7 +26,7 @@
     "duration": 180,
     "description": "Cozy up under shelter as gentle rain patters around you. A classic sleep soundscape designed to lull you into deep, restorative rest.",
     "image": "assets/images/rain.jpg",
-    "audio": "assets/audio/session.mp3",
+    "audio": "assets/audio/Rain shelter.mp3",
     "recipe": ["Rain", "Thunder", "Fireplace"]
   },
   {
@@ -36,7 +36,7 @@
     "duration": 120,
     "description": "A refreshing dawn experience to clear your mind and restore your energy. Gentle morning sounds and warm light guide you back to centre.",
     "image": "assets/images/sunrise.jpg",
-    "audio": "assets/audio/session.mp3",
+    "audio": "assets/audio/sunrise reset.mp3",
     "recipe": ["Warm Light", "Birdsong", "Breeze"]
   },
   {
@@ -46,7 +46,7 @@
     "duration": 150,
     "description": "Ascend above the clouds into serene mountain peaks. Crisp alpine air and distant echoes create an environment perfect for sustained attention and creative flow.",
     "image": "assets/images/peaks.jpg",
-    "audio": "assets/audio/session.mp3",
+    "audio": "assets/audio/forest.mp3",
     "recipe": ["Wind", "Cool Mist", "White Noise"]
   },
   {
@@ -56,7 +56,7 @@
     "duration": 180,
     "description": "Drift off under a canopy of stars in a quiet meadow. Soft ambient tones and distant night sounds create the perfect sleep environment.",
     "image": "assets/images/meadow.jpg",
-    "audio": "assets/audio/session.mp3",
+    "audio": "assets/audio/sleep.mp3",
     "recipe": ["Night Sounds", "Cool Breeze", "Binaural"]
   }
 ]

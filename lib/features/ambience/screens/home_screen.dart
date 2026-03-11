@@ -25,63 +25,6 @@ class HomeScreen extends ConsumerWidget {
     final isDark = themeMode == ThemeMode.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        leading: null,
-        automaticallyImplyLeading: false,
-        title: const Text('Ambiences'),
-        actions: [
-          // Theme toggle button
-          GestureDetector(
-            onTap: () {
-              HapticSettingsNotifier.triggerHaptic();
-              ref.read(themeProvider.notifier).toggleTheme();
-            },
-            child: Container(
-              margin: const EdgeInsets.only(right: 8),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.1)
-                    : Colors.black.withValues(alpha: 0.06),
-                shape: BoxShape.circle,
-              ),
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                transitionBuilder: (child, anim) =>
-                    RotationTransition(turns: anim, child: child),
-                child: Icon(
-                  isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                  key: ValueKey(isDark),
-                  size: 22,
-                  color: isDark ? AppColors.orangeLight : AppColors.orange,
-                ),
-              ),
-            ),
-          ),
-          // Settings button
-          GestureDetector(
-            onTap: () {
-              HapticSettingsNotifier.triggerHaptic();
-              context.push('/settings');
-            },
-            child: Container(
-              margin: const EdgeInsets.only(right: 16),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.1)
-                    : Colors.black.withValues(alpha: 0.06),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.settings_rounded,
-                size: 22,
-                color: isDark ? AppColors.orangeLight : AppColors.orange,
-              ),
-            ),
-          ),
-        ],
-      ),
       body: Column(
         children: [
           Expanded(
@@ -91,6 +34,115 @@ class HomeScreen extends ConsumerWidget {
               ),
               cacheExtent: 600,
               slivers: [
+                // Premium header instead of plain AppBar
+                SliverAppBar(
+                  expandedHeight: 140,
+                  floating: false,
+                  pinned: true,
+                  automaticallyImplyLeading: false,
+                  backgroundColor: isDark
+                      ? AppColors.backgroundDark
+                      : AppColors.backgroundLight,
+                  flexibleSpace: FlexibleSpaceBar(
+                    titlePadding: const EdgeInsets.only(left: 24, bottom: 16),
+                    title: Text(
+                      'ArvyaX',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimaryLight,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    background: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: isDark
+                              ? [
+                                  AppColors.orange.withValues(alpha: 0.12),
+                                  AppColors.backgroundDark.withValues(
+                                    alpha: 0.0,
+                                  ),
+                                ]
+                              : [
+                                  AppColors.orange.withValues(alpha: 0.06),
+                                  AppColors.backgroundLight.withValues(
+                                    alpha: 0.0,
+                                  ),
+                                ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    // Theme toggle
+                    GestureDetector(
+                      onTap: () {
+                        HapticSettingsNotifier.triggerHaptic();
+                        ref.read(themeProvider.notifier).toggleTheme();
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 8),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.08)
+                              : Colors.white.withValues(alpha: 0.7),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isDark
+                                ? Colors.white.withValues(alpha: 0.12)
+                                : Colors.white.withValues(alpha: 0.9),
+                          ),
+                        ),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          transitionBuilder: (child, anim) =>
+                              RotationTransition(turns: anim, child: child),
+                          child: Icon(
+                            isDark
+                                ? Icons.light_mode_rounded
+                                : Icons.dark_mode_rounded,
+                            key: ValueKey(isDark),
+                            size: 20,
+                            color: AppColors.orange,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Settings
+                    GestureDetector(
+                      onTap: () {
+                        HapticSettingsNotifier.triggerHaptic();
+                        context.push('/settings');
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 16),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.08)
+                              : Colors.white.withValues(alpha: 0.7),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isDark
+                                ? Colors.white.withValues(alpha: 0.12)
+                                : Colors.white.withValues(alpha: 0.9),
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.tune_rounded,
+                          size: 20,
+                          color: AppColors.orange,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
@@ -144,11 +196,28 @@ class HomeScreen extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
-                    child: Text(
-                      selectedTag != null
-                          ? 'Popular for $selectedTag'
-                          : 'All Ambiences',
-                      style: Theme.of(context).textTheme.headlineSmall,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 4,
+                          height: 22,
+                          decoration: BoxDecoration(
+                            color: AppColors.orange,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          selectedTag != null
+                              ? 'Popular for $selectedTag'
+                              : 'All Ambiences',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.3,
+                              ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

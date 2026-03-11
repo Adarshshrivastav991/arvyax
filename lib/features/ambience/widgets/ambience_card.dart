@@ -157,19 +157,38 @@ class _AmbienceCardState extends State<AmbienceCard>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            _tagColor.withValues(alpha: 0.3),
-            _tagColor.withValues(alpha: 0.7),
+            _tagColor.withValues(alpha: 0.4),
+            _tagColor.withValues(alpha: 0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
       ),
-      child: Center(
-        child: Icon(
-          _tagIcon,
-          size: 48,
-          color: Colors.white.withValues(alpha: 0.6),
-        ),
+      child: Stack(
+        children: [
+          // Subtle radial glow
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: const Alignment(0.3, -0.3),
+                  radius: 1.2,
+                  colors: [
+                    Colors.white.withValues(alpha: 0.15),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: Icon(
+              _tagIcon,
+              size: 44,
+              color: Colors.white.withValues(alpha: 0.5),
+            ),
+          ),
+        ],
       ),
     );
   }

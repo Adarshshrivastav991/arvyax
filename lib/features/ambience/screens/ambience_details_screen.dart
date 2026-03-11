@@ -170,17 +170,55 @@ class AmbienceDetailsScreen extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [color.withValues(alpha: 0.4), color.withValues(alpha: 0.8)],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+          colors: [color.withValues(alpha: 0.5), color.withValues(alpha: 0.9)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
       ),
-      child: Center(
-        child: Icon(
-          _tagIcon(tag),
-          size: 80,
-          color: Colors.white.withValues(alpha: 0.4),
-        ),
+      child: Stack(
+        children: [
+          // Subtle radial glow
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: const Alignment(0.0, -0.3),
+                  radius: 1.0,
+                  colors: [
+                    Colors.white.withValues(alpha: 0.15),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: Icon(
+              _tagIcon(tag),
+              size: 72,
+              color: Colors.white.withValues(alpha: 0.35),
+            ),
+          ),
+          // Bottom gradient fade
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 80,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.15),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

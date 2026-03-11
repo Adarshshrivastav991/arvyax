@@ -6,8 +6,10 @@ import 'features/player/screens/session_player_screen.dart';
 import 'features/journal/screens/reflection_screen.dart';
 import 'features/journal/screens/journal_history_screen.dart';
 import 'features/journal/screens/journal_detail_screen.dart';
+import 'features/sessions/screens/sessions_library_screen.dart';
 import 'features/settings/settings_screen.dart';
 import 'shared/providers/haptic_settings_provider.dart';
+import 'shared/theme/colors.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -25,7 +27,7 @@ final appRouter = GoRouter(
         GoRoute(
           path: '/sessions',
           pageBuilder: (context, state) =>
-              const NoTransitionPage(child: HomeScreen()),
+              const NoTransitionPage(child: SessionsLibraryScreen()),
         ),
         GoRoute(
           path: '/journal',
@@ -84,51 +86,137 @@ class _ScaffoldWithNav extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: isDark
-              ? Colors.black.withValues(alpha: 0.4)
-              : Colors.white.withValues(alpha: 0.6),
+              ? const Color(0xFF1A1D21).withValues(alpha: 0.92)
+              : Colors.white.withValues(alpha: 0.92),
           border: Border(
             top: BorderSide(
               color: isDark
-                  ? Colors.white.withValues(alpha: 0.1)
-                  : Colors.white.withValues(alpha: 0.8),
-              width: 0.8,
+                  ? Colors.white.withValues(alpha: 0.06)
+                  : Colors.black.withValues(alpha: 0.04),
+              width: 0.5,
+            ),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+              blurRadius: 20,
+              offset: const Offset(0, -4),
+              spreadRadius: -2,
+            ),
+          ],
+        ),
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _NavItem(
+                  icon: Icons.home_outlined,
+                  activeIcon: Icons.home_rounded,
+                  label: 'Home',
+                  isActive: _currentIndex == 0,
+                  isDark: isDark,
+                  onTap: () {
+                    HapticSettingsNotifier.triggerHaptic();
+                    context.go('/');
+                  },
+                ),
+                _NavItem(
+                  icon: Icons.library_music_outlined,
+                  activeIcon: Icons.library_music_rounded,
+                  label: 'Sessions',
+                  isActive: _currentIndex == 1,
+                  isDark: isDark,
+                  onTap: () {
+                    HapticSettingsNotifier.triggerHaptic();
+                    context.go('/sessions');
+                  },
+                ),
+                _NavItem(
+                  icon: Icons.auto_stories_outlined,
+                  activeIcon: Icons.auto_stories_rounded,
+                  label: 'Journal',
+                  isActive: _currentIndex == 2,
+                  isDark: isDark,
+                  onTap: () {
+                    HapticSettingsNotifier.triggerHaptic();
+                    context.go('/journal');
+                  },
+                ),
+              ],
             ),
           ),
         ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          onTap: (index) {
-            HapticSettingsNotifier.triggerHaptic();
-            switch (index) {
-              case 0:
-                context.go('/');
-                break;
-              case 1:
-                context.go('/sessions');
-                break;
-              case 2:
-                context.go('/journal');
-                break;
-            }
-          },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: 'HOME',
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  final IconData icon;
+  final IconData activeIcon;
+  final String label;
+  final bool isActive;
+  final bool isDark;
+  final VoidCallback onTap;
+
+  const _NavItem({
+    required this.icon,
+    required this.activeIcon,
+    required this.label,
+    required this.isActive,
+    required this.isDark,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOutCubic,
+        padding: EdgeInsets.symmetric(
+          horizontal: isActive ? 20 : 16,
+          vertical: 8,
+        ),
+        decoration: BoxDecoration(
+          color: isActive
+              ? AppColors.orange.withValues(alpha: 0.12)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                isActive ? activeIcon : icon,
+                key: ValueKey(isActive),
+                size: 22,
+                color: isActive
+                    ? AppColors.orange
+                    : isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondaryLight,
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.play_circle_outline),
-              activeIcon: Icon(Icons.play_circle),
-              label: 'SESSIONS',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.library_books_outlined),
-              activeIcon: Icon(Icons.library_books),
-              label: 'JOURNAL',
-            ),
+            if (isActive) ...[
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: TextStyle(
+                  color: AppColors.orange,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
+                ),
+              ),
+            ],
           ],
         ),
       ),

@@ -96,17 +96,9 @@ class SessionController extends StateNotifier<SessionState> {
       isSessionComplete: false,
     );
 
-    try {
-      // Use audio handler for background playback with notification
-      await audioHandler.loadAudio(
-        ambience.audio,
-        ambience.title,
-        ambience.tag,
-      );
-      await audioHandler.play();
-    } catch (_) {
-      // Audio asset may not exist in dev; session timer still works
-    }
+    // Use audio handler for background playback with notification
+    await audioHandler.loadAudio(ambience.audio, ambience.title, ambience.tag);
+    await audioHandler.play();
 
     _startTimer();
     _persistState();

@@ -67,21 +67,29 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer>
                   end: Alignment.bottomRight,
                   colors: isDark
                       ? [
-                          Colors.white.withValues(alpha: 0.12),
+                          Colors.white.withValues(alpha: 0.14),
                           Colors.white.withValues(alpha: 0.08),
                         ]
                       : [
+                          Colors.white.withValues(alpha: 0.9),
                           Colors.white.withValues(alpha: 0.75),
-                          Colors.white.withValues(alpha: 0.6),
                         ],
                 ),
-                borderRadius: BorderRadius.circular(28),
+                borderRadius: BorderRadius.circular(24),
                 border: Border.all(
                   color: isDark
-                      ? Colors.white.withValues(alpha: 0.18)
-                      : Colors.white.withValues(alpha: 0.9),
-                  width: 1.5,
+                      ? Colors.white.withValues(alpha: 0.12)
+                      : Colors.white.withValues(alpha: 0.95),
+                  width: 1,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                    spreadRadius: -4,
+                  ),
+                ],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -143,14 +151,31 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer>
                         child: Container(
                           width: 42,
                           height: 42,
-                          decoration: const BoxDecoration(
-                            color: AppColors.orange,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [AppColors.orange, AppColors.orangeLight],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
                             shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.orange.withValues(alpha: 0.3),
+                                blurRadius: 10,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
                           ),
-                          child: Icon(
-                            state.isPlaying ? Icons.pause : Icons.play_arrow,
-                            color: Colors.white,
-                            size: 22,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: Icon(
+                              state.isPlaying
+                                  ? Icons.pause_rounded
+                                  : Icons.play_arrow_rounded,
+                              key: ValueKey(state.isPlaying),
+                              color: Colors.white,
+                              size: 22,
+                            ),
                           ),
                         ),
                       ),

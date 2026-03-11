@@ -63,21 +63,29 @@ class _JournalCardState extends State<JournalCard>
                 end: Alignment.bottomRight,
                 colors: isDark
                     ? [
-                        Colors.white.withValues(alpha: 0.12),
-                        Colors.white.withValues(alpha: 0.08),
+                        Colors.white.withValues(alpha: 0.1),
+                        Colors.white.withValues(alpha: 0.06),
                       ]
                     : [
+                        Colors.white.withValues(alpha: 0.9),
                         Colors.white.withValues(alpha: 0.75),
-                        Colors.white.withValues(alpha: 0.6),
                       ],
               ),
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: isDark
-                    ? Colors.white.withValues(alpha: 0.18)
-                    : Colors.white.withValues(alpha: 0.9),
-                width: 1.5,
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : Colors.white.withValues(alpha: 0.95),
+                width: 1,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: tagColor.withValues(alpha: isDark ? 0.08 : 0.06),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                  spreadRadius: -4,
+                ),
+              ],
             ),
             clipBehavior: Clip.antiAlias,
             child: Column(
@@ -85,24 +93,43 @@ class _JournalCardState extends State<JournalCard>
               children: [
                 // Image header
                 Container(
-                  height: 140,
+                  height: 130,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        tagColor.withValues(alpha: 0.3),
-                        tagColor.withValues(alpha: 0.7),
+                        tagColor.withValues(alpha: 0.4),
+                        tagColor.withValues(alpha: 0.8),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  child: Center(
-                    child: Icon(
-                      _tagIcon(widget.entry.ambienceTag),
-                      size: 48,
-                      color: Colors.white.withValues(alpha: 0.5),
-                    ),
+                  child: Stack(
+                    children: [
+                      // Subtle radial effect
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: RadialGradient(
+                              center: const Alignment(0.4, -0.4),
+                              radius: 1.5,
+                              colors: [
+                                Colors.white.withValues(alpha: 0.12),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Icon(
+                          _tagIcon(widget.entry.ambienceTag),
+                          size: 44,
+                          color: Colors.white.withValues(alpha: 0.4),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
@@ -165,8 +192,25 @@ class _JournalCardState extends State<JournalCard>
                               vertical: 10,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.orange,
-                              borderRadius: BorderRadius.circular(18),
+                              gradient: const LinearGradient(
+                                colors: [
+                                  AppColors.orange,
+                                  AppColors.orangeLight,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.orange.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 3),
+                                  spreadRadius: -2,
+                                ),
+                              ],
                             ),
                             child: const Text(
                               'View Session',

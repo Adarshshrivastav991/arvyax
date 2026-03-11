@@ -13,28 +13,66 @@ class JournalHistoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final entriesAsync = ref.watch(journalEntriesProvider);
     final selectedTab = ref.watch(journalTabProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Journal'),
-      ),
       body: Column(
         children: [
+          // Premium header
+          Container(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + 16,
+              left: 24,
+              right: 24,
+              bottom: 16,
+            ),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? AppColors.backgroundDark
+                  : AppColors.backgroundLight,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Journal',
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Your reflections & growth',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondaryLight,
+                  ),
+                ),
+              ],
+            ),
+          ),
           // Tab bar
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
             child: Row(
               children: [
-                _buildTab(context, ref, 'All', 0, selectedTab),
-                const SizedBox(width: 24),
-                _buildTab(context, ref, 'Recent', 1, selectedTab),
-                const SizedBox(width: 24),
-                _buildTab(context, ref, 'Favorites', 2, selectedTab),
+                _buildTab(context, ref, 'All', 0, selectedTab, isDark),
+                const SizedBox(width: 10),
+                _buildTab(context, ref, 'Recent', 1, selectedTab, isDark),
+                const SizedBox(width: 10),
+                _buildTab(context, ref, 'Favorites', 2, selectedTab, isDark),
               ],
             ),
           ),
-          const Divider(height: 1),
+          Divider(
+            height: 1,
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.06)
+                : Colors.black.withValues(alpha: 0.04),
+          ),
           Expanded(
             child: entriesAsync.when(
               data: (entries) {
@@ -93,31 +131,42 @@ class JournalHistoryScreen extends ConsumerWidget {
     String label,
     int index,
     int selected,
+    bool isDark,
   ) {
     final isSelected = selected == index;
     return GestureDetector(
       onTap: () => ref.read(journalTabProvider.notifier).state = index,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                color: isSelected
-                    ? AppColors.orange
-                    : AppColors.textSecondaryLight,
-              ),
-            ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOutCubic,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.orange.withValues(alpha: 0.12)
+              : isDark
+              ? Colors.white.withValues(alpha: 0.04)
+              : Colors.black.withValues(alpha: 0.03),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected
+                ? AppColors.orange.withValues(alpha: 0.3)
+                : Colors.transparent,
+            width: 1,
           ),
-          Container(
-            height: 2,
-            width: 30,
-            color: isSelected ? AppColors.orange : Colors.transparent,
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            color: isSelected
+                ? AppColors.orange
+                : isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondaryLight,
+            letterSpacing: -0.2,
           ),
-        ],
+        ),
       ),
     );
   }

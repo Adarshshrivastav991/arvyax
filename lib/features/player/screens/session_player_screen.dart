@@ -83,38 +83,62 @@ class _SessionPlayerScreenState extends ConsumerState<SessionPlayerScreen>
           children: [
             // Top bar
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.keyboard_arrow_down, size: 30),
-                    onPressed: () {
+                  GestureDetector(
+                    onTap: () {
                       HapticSettingsNotifier.triggerHaptic();
                       context.pop();
                     },
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withValues(alpha: 0.08)
+                            : Colors.black.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: 24,
+                      ),
+                    ),
                   ),
                   Column(
                     children: [
                       Text(
                         'NOW PLAYING',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          letterSpacing: 2,
-                          fontWeight: FontWeight.w600,
+                          letterSpacing: 3,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.orange.withValues(alpha: 0.8),
+                          fontSize: 10,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 3),
                       Text(
                         'ArvyaX Session',
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.more_horiz),
-                    onPressed: () {
+                  GestureDetector(
+                    onTap: () {
                       HapticSettingsNotifier.triggerHaptic();
                     },
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withValues(alpha: 0.08)
+                            : Colors.black.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Icon(Icons.more_horiz_rounded, size: 24),
+                    ),
                   ),
                 ],
               ),
@@ -138,29 +162,44 @@ class _SessionPlayerScreenState extends ConsumerState<SessionPlayerScreen>
 
             // Title and level
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
                   Text(
                     ambience.title.replaceAll(ambience.tag, '').trim().isEmpty
                         ? 'Deep Breathing'
                         : ambience.title,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.5,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Level 1 • Focused Clarity',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.orange,
-                      fontWeight: FontWeight.w500,
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.orange.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      ambience.tag.toUpperCase(),
+                      style: TextStyle(
+                        color: AppColors.orange,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                        letterSpacing: 1.5,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
 
             // Progress bar
             Padding(
@@ -191,15 +230,16 @@ class _SessionPlayerScreenState extends ConsumerState<SessionPlayerScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(3, (i) {
-                return Container(
-                  width: 6,
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: i == 0 ? 20 : 6,
                   height: 6,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  margin: const EdgeInsets.symmetric(horizontal: 3),
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(3),
                     color: i == 0
-                        ? AppColors.textPrimaryLight.withValues(alpha: 0.6)
-                        : AppColors.textSecondaryLight.withValues(alpha: 0.3),
+                        ? AppColors.orange
+                        : AppColors.textSecondaryLight.withValues(alpha: 0.25),
                   ),
                 );
               }),
@@ -208,28 +248,31 @@ class _SessionPlayerScreenState extends ConsumerState<SessionPlayerScreen>
             const SizedBox(height: 16),
 
             // End Session button
-            TextButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 HapticSettingsNotifier.triggerHaptic();
                 _showEndSessionDialog(context, controller);
               },
-              style: TextButton.styleFrom(
+              child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 12,
                 ),
-                shape: RoundedRectangleBorder(
+                decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
-                  side: BorderSide(
-                    color: AppColors.textSecondaryLight.withValues(alpha: 0.3),
+                  border: Border.all(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white.withValues(alpha: 0.12)
+                        : Colors.black.withValues(alpha: 0.08),
                   ),
                 ),
-              ),
-              child: Text(
-                'END SESSION',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.w700,
+                child: Text(
+                  'END SESSION',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    letterSpacing: 2.5,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 11,
+                  ),
                 ),
               ),
             ),
@@ -244,45 +287,64 @@ class _SessionPlayerScreenState extends ConsumerState<SessionPlayerScreen>
   Widget _buildAlbumArt(String tag) {
     final color = _tagColor(tag);
     return Container(
-      width: 260,
-      height: 260,
+      width: 280,
+      height: 280,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: RadialGradient(
           colors: [
-            color.withValues(alpha: 0.3),
-            color.withValues(alpha: 0.1),
+            color.withValues(alpha: 0.35),
+            color.withValues(alpha: 0.12),
             Colors.transparent,
           ],
-          stops: const [0.4, 0.7, 1.0],
+          stops: const [0.3, 0.65, 1.0],
         ),
       ),
       child: Center(
         child: Container(
-          width: 200,
-          height: 200,
+          width: 210,
+          height: 210,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: LinearGradient(
               colors: [
-                color.withValues(alpha: 0.4),
-                color.withValues(alpha: 0.7),
+                color.withValues(alpha: 0.5),
+                color.withValues(alpha: 0.8),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             boxShadow: [
               BoxShadow(
-                color: color.withValues(alpha: 0.3),
-                blurRadius: 30,
-                spreadRadius: 5,
+                color: color.withValues(alpha: 0.35),
+                blurRadius: 40,
+                spreadRadius: 8,
               ),
             ],
           ),
-          child: Icon(
-            _tagIcon(tag),
-            size: 64,
-            color: Colors.white.withValues(alpha: 0.5),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // Inner glow
+              Container(
+                width: 140,
+                height: 140,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.white.withValues(alpha: 0.12),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+              Icon(
+                _tagIcon(tag),
+                size: 60,
+                color: Colors.white.withValues(alpha: 0.5),
+              ),
+            ],
           ),
         ),
       ),
